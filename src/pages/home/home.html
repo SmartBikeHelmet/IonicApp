@@ -1,14 +1,50 @@
 <ion-header>
   <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
     <ion-title>
-      Ionic Blank
+      Perfiles
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+  <button ion-button full (click)="newProfileTapped($event)">Crear un nuevo perfil</button>
+  <ion-list>
+    <ion-list-header>
+      Tus perfiles:
+    </ion-list-header>
+
+     <!-- Item de la lista - Toca hacer que itere la BD -->
+    <ion-item>
+      <ion-row>
+        <label>Nocturno 1</label>
+      </ion-row>
+      <ion-row>
+        <button ion-button color="secondary" icon-start item-end>
+          <ion-icon name="cloud-upload"></ion-icon>
+          Activar
+        </button>
+        <button ion-button color="danger" icon-start item-end>
+          <ion-icon name='close'></ion-icon>
+          Eliminar
+        </button>
+      </ion-row>
+    </ion-item>
+
+    <ion-item>
+      <ion-row>
+        <label>Nocturno 2</label>
+      </ion-row>
+      <ion-row>
+        <button ion-button icon-start item-end>
+          <ion-icon name='checkmark'></ion-icon>
+          Activo
+        </button>
+      </ion-row>
+    </ion-item>
+    <!-- Item de la lista - Toca hacer que itere la BD -->
+
+  </ion-list>
 </ion-content>

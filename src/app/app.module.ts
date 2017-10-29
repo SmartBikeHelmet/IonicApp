@@ -3,27 +3,35 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
+import { NativeStorage } from '@ionic-native/native-storage';
 
-import { MyApp } from './app.component';
+import { Lum } from './app.component';
 import { HomePage } from '../pages/home/home';
+import { CreateProfile } from '../pages/create-profile/create-profile';
+import { AccountSettings } from '../pages/account-settings/account-settings';
 
 @NgModule({
   declarations: [
-    MyApp,
-    HomePage
+    Lum,
+    HomePage,
+    CreateProfile,
+    AccountSettings
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(Lum)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    MyApp,
-    HomePage
+    Lum,
+    HomePage,
+    CreateProfile,
+    AccountSettings
   ],
   providers: [
     StatusBar,
     SplashScreen,
+    NativeStorage,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

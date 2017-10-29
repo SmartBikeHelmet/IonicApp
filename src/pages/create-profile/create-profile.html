@@ -1,0 +1,56 @@
+<ion-header>
+  <ion-navbar>
+    <button menuToggle >
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Crear un perfil</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-list-header>
+      Nombre del perfil de luces
+    </ion-list-header>
+    <ion-item>
+      <ion-input type="text" placeholder="Nombre" [(ngModel)]="nombrePerfil"></ion-input>
+    </ion-item>
+    <ion-list-header>
+      Ajustar intensidad de las luces direccionales
+    </ion-list-header>
+    <ion-item>
+      <ion-range min="0" max="20" [(ngModel)]="intensidadDireccionales">
+        <ion-icon range-left small name="sunny"></ion-icon>
+        <ion-icon range-right name="sunny"></ion-icon>
+      </ion-range>
+    </ion-item>
+    <ion-list-header>
+      Ajustar intensidad de la luz de frenado
+    </ion-list-header>
+    <ion-item>
+      <ion-range min="0" max="20" [(ngModel)]="intensidadFrenado">
+        <ion-icon range-left small name="sunny"></ion-icon>
+        <ion-icon range-right name="sunny"></ion-icon>
+      </ion-range>
+    </ion-item>
+    <ion-list-header>
+      Modo nocturno
+    </ion-list-header>
+    <ion-item>
+      <ion-label class="labelLuzContinua">Activar luz de freno continua</ion-label>
+      <ion-checkbox [(ngModel)]="frenadoContinua" color="dark"></ion-checkbox>
+    </ion-item>
+    <ion-item *ngIf="frenadoContinua">
+      <ion-label>Intesidad de la luz de frenado continua</ion-label>
+      <ion-range min="0" max="20" [(ngModel)]="intensidadFrenadoContinua">
+        <ion-icon range-left small name="sunny"></ion-icon>
+        <ion-icon range-right name="sunny"></ion-icon>
+      </ion-range>
+    </ion-item>
+  </ion-list>
+  <ion-row center>
+    <ion-col text-center>
+      <button ion-button color="secondary" (click)="createProfile()">Crear Perfil</button>
+    </ion-col>
+  </ion-row>
+</ion-content>
