@@ -12,6 +12,7 @@ export class CreateProfile {
   intensidadFrenado: number;
   frenadoContinua: boolean;
   intensidadFrenadoContinua: number;
+  keys: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private nativeStorage: NativeStorage) {
     this.nombrePerfil = "";
@@ -19,7 +20,7 @@ export class CreateProfile {
     this.intensidadFrenado = 10;
     this.frenadoContinua = false;
     this.intensidadFrenadoContinua = 10;
-    //this.nativeStorage.clear();
+    this.nativeStorage.clear();
   }
 
   createProfile(){
@@ -33,35 +34,70 @@ export class CreateProfile {
     else
       perfil.intensidadFrenadoContinua = null;
 
-    /*this.nativeStorage.getItem( 'PerfilNombres' )
+    var storage = this.nativeStorage;
+    var navigation = this.navCtrl;
+
+    this.nativeStorage.getItem( 'PerfilNombres' )
     .then(
+      // El arreglo de nombres existe
       data => {
-        this.nativeStorage.setItem( 'PerfilNombres', data.push( perfil.nombrePerfil ) )
+        // Se empuja el ultimo nombre
+        storage.setItem( 'PerfilNombres', data.nombres.push( perfil.nombrePerfil ) )
         .then(
+
+          // Se guarda el arreglo de nombres
+          () => {
+            // Se guarda el perfil con el nombre como llave
+            storage.setItem( perfil.nombrePerfil, perfil )
+            .then(
+
+              // Se guarda el perfil bien, se retorna en la navegacion
+              () => {
+                navigation.pop();
+              },
+              // Error
+              error => {
+                alert('Se presento un error en el guardado, intenta mas tarde');
+              }
+            );
+          },
+          // Error
           error => {
-            console.error('Error storing item', error);
+            alert('Se presento un error en el guardado, intenta mas tarde');
           }
         );
       },
+
+      // El arreglo de nombres no existe
       error => {
-        this.nativeStorage.setItem( 'PerfilNombres', [].push( perfil.nombrePerfil ) )
+        // Se crea el arreglo con el ultimo nombre
+        storage.setItem( 'PerfilNombres', { nombres: [ perfil.nombrePerfil ] } )
         .then(
+
+          // Se guarda el arreglo de nombres
+          () => {
+            // Se guarda el perfil con el nombre como llave
+            storage.setItem( perfil.nombrePerfil, perfil )
+            .then(
+              // Se guarda el perfil bien, se retorna en la navegacion
+              () => {
+                navigation.pop();
+              },
+              // Error
+              error => {
+                alert('Se presento un error en el guardado, intenta mas tarde');
+              }
+            );
+          },
+          // Error
           error => {
-            console.error('Error storing item', error);
+            alert('Se presento un error en el guardado, intenta mas tarde');
           }
         );
       }
     );
-
-    this.nativeStorage.setItem( perfil.nombrePerfil, perfil )
-    .then(
-      () => console.log('Stored item!'),
-      error => console.error('Error storing item', error)
-    );*/
-
-
-
-    console.log(JSON.stringify(perfil));
   }
+
+
 
 }

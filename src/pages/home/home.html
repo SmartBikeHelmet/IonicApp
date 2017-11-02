@@ -9,12 +9,18 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content padding cache-view="false">
   <button ion-button full (click)="newProfileTapped($event)">Crear un nuevo perfil</button>
   <ion-list>
     <ion-list-header>
-      Tus perfiles:
+      Tus perfiles: {{perfilesLista}}
     </ion-list-header>
+
+    <ion-item *ngFor="let nombre of perfilesLista">
+      <ion-row>
+        <label>{{nombre}}</label>
+      </ion-row>
+    </ion-item>
 
      <!-- Item de la lista - Toca hacer que itere la BD -->
     <ion-item>

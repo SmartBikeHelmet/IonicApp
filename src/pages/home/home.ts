@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { Http, Headers } from '@angular/http';
+import { NativeStorage } from '@ionic-native/native-storage';
 
 import { CreateProfile } from '../create-profile/create-profile'
 
@@ -11,8 +12,33 @@ import { CreateProfile } from '../create-profile/create-profile'
 })
 export class HomePage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public http: Http ) {
+  perfilesLista: string[];
 
+  constructor( private navCtrl: NavController, private navParams: NavParams, private http: Http, private nativeStorage: NativeStorage ) {
+    // this.imprimirKeys();
+
+    var guardarLista = function( data ){
+      this.perfilesLista = data;
+      alert( this.perfilesLista );
+    };
+
+    this.nativeStorage.getItem( 'PerfilNombres' )
+    .then(
+      data => {
+        guardarLista( data );
+      },
+      error => {
+         return "error";
+      }
+    );
+  }
+
+  imprimirKeys(){
+    this.nativeStorage.keys()
+    .then(
+      data => alert(data),
+      error => alert(error)
+    );
   }
 
   newProfileTapped($event){
@@ -20,7 +46,7 @@ export class HomePage {
   }
 
   sendDataToModule(){
-      var body = "intensidadDireccional=1&intensidadFrenado=2&frenadoContinuo=false";//{ intensidadDireccional: 1, intensidadFrenado: 1, frenadoContinuo: true };
+      var body = "intensidadDireccional=1&intensidadFrenado=2&frenadoContinuo=false";
       var headers = new Headers();
       headers.append('Content-Type', 'application/x-www-form-urlencoded');
 
