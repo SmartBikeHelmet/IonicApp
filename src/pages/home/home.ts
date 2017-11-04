@@ -13,6 +13,7 @@ import { CreateProfile } from '../create-profile/create-profile'
 export class HomePage {
 
   public perfilesLista: string[];
+  public activo: string;
 
   constructor( private navCtrl: NavController, private navParams: NavParams, private http: Http, private nativeStorage: NativeStorage ) {
     this.loadProfilesList();
@@ -20,6 +21,13 @@ export class HomePage {
 
   loadProfilesList () : void {
     let obj = this;
+
+    this.nativeStorage.getItem( 'Activo' )
+    .then(
+      data  => obj.activo = data.nombre,
+      error => obj.activo = null
+    );
+
     this.nativeStorage.getItem( 'PerfilNombres' )
     .then(
       data  => obj.perfilesLista = data.nombres,
@@ -43,21 +51,39 @@ export class HomePage {
   }
 
 
-  sendDataToModule () : void {
-    //alert( nombre );
+  sendDataToModule ( nombre ) : void {
+    let obj = this;
 
-    var body = "intensidadDireccional=1&intensidadFrenado=2&frenadoContinuo=false";
-    var headers = new Headers();
-    headers.append('Content-Type', 'application/x-www-form-urlencoded');
+    this.nativeStorage.getItem( nombre )
+    .then(
+      data => {
+        var body = "intensidadDireccional="+ data.direccionales +"&intensidadFrenado="+ data.frenado +"&frenadoContinuo="+ data.continuo;
+        alert( body );
+        obj.nativeStorage.setItem('Activo', { nombre: data.nombre })
+        .then(
+          () => {
+            obj.activo = data.nombre;
+          },
+          error => {
 
-    this.http.post( 'http://192.168.111.1/index.lua', body, { headers: headers } )
-    .subscribe(
-       data => {
-        console.log(data['_body']);
+          }
+        );
+        /*var headers = new Headers();
+        headers.append('Content-Type', 'application/x-www-form-urlencoded');
+
+        this.http.post( 'http://192.168.111.1/index.lua', body, { headers: headers } )
+        .subscribe(
+           data => {
+            console.log(data['_body']);
+          },
+           error => {
+            console.log(error);
+           }
+         );*/
       },
-       error => {
-        console.log(error);
-       }
-     );
+      error => {
+
+      }
+    );
   }
 }
