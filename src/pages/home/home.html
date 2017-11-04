@@ -11,6 +11,7 @@
 
 <ion-content padding>
   <button ion-button full (click)="newProfileTapped($event)">Crear un nuevo perfil</button>
+
   <ion-list>
     <ion-list-header>
       Tus perfiles:
@@ -42,10 +43,11 @@
               <ion-icon name="cloud-upload"></ion-icon>
               Activar
             </button>
-            <button ion-button color="danger" icon-start item-end>
+            <button ion-button color="danger" icon-start item-end (click)="confirmDelete( nombre )">
               <ion-icon name='close'></ion-icon>
               Eliminar
             </button>
+
           </ion-row>
         </ion-item>
       </ng-container>

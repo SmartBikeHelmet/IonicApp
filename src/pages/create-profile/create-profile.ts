@@ -5,7 +5,7 @@ import { NativeStorage } from '@ionic-native/native-storage';
 export interface Perfil {
   nombre:         string;
   direccionales:  number;
-  freno:          number;
+  frenado:          number;
   continuo:       boolean;
 }
 

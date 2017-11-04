@@ -7,6 +7,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { NativeStorage } from '@ionic-native/native-storage';
 
+
 import { Lum } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { CreateProfile } from '../pages/create-profile/create-profile';
