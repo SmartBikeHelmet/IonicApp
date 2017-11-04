@@ -2,58 +2,52 @@ import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { NativeStorage } from '@ionic-native/native-storage';
 
+export interface Perfil {
+  nombre:         string;
+  direccionales:  number;
+  freno:          number;
+  continuo:       boolean;
+}
+
 @Component({
   selector: 'create-profile',
   templateUrl: 'create-profile.html'
 })
 export class CreateProfile {
-  nombrePerfil: string;
-  intensidadDireccionales: number;
-  intensidadFrenado: number;
-  frenadoContinua: boolean;
-  intensidadFrenadoContinua: number;
-  keys: string;
+  perfil: Perfil;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private nativeStorage: NativeStorage) {
-    this.nombrePerfil = "";
-    this.intensidadDireccionales = 10;
-    this.intensidadFrenado = 10;
-    this.frenadoContinua = false;
-    this.intensidadFrenadoContinua = 10;
-    this.nativeStorage.clear();
+  constructor( private navCtrl: NavController, private navParams: NavParams, private nativeStorage: NativeStorage ) {
+    this.perfil = { nombre: "", direccionales: 10, frenado: 10, continuo: false };
+    this.reload = this.navParams.get("callback");
   }
 
-  createProfile(){
-    let perfil: any = {};
-    perfil.nombrePerfil = this.nombrePerfil;
-    perfil.intensidadDireccionales = this.intensidadDireccionales;
-    perfil.intensidadFrenado = this.intensidadFrenado;
-    perfil.frenadoContinua = this.frenadoContinua;
-    if( this.frenadoContinua )
-      perfil.intensidadFrenadoContinua = this.intensidadFrenadoContinua;
-    else
-      perfil.intensidadFrenadoContinua = null;
-
-    var storage = this.nativeStorage;
-    var navigation = this.navCtrl;
+  createProfile (){
+    let thisObj = this;
+    let storage = this.nativeStorage;
+    let navigation = this.navCtrl;
+    let adicional = this.perfil;
 
     this.nativeStorage.getItem( 'PerfilNombres' )
     .then(
       // El arreglo de nombres existe
       data => {
         // Se empuja el ultimo nombre
-        storage.setItem( 'PerfilNombres', data.nombres.push( perfil.nombrePerfil ) )
+        data.nombres.push( adicional.nombre );
+
+        storage.setItem( 'PerfilNombres', data )
         .then(
 
           // Se guarda el arreglo de nombres
           () => {
             // Se guarda el perfil con el nombre como llave
-            storage.setItem( perfil.nombrePerfil, perfil )
+            storage.setItem( adicional.nombre, adicional )
             .then(
 
               // Se guarda el perfil bien, se retorna en la navegacion
               () => {
-                navigation.pop();
+                thisObj.reload().then(() => {
+                    navigation.pop();
+                });
               },
               // Error
               error => {
@@ -71,17 +65,19 @@ export class CreateProfile {
       // El arreglo de nombres no existe
       error => {
         // Se crea el arreglo con el ultimo nombre
-        storage.setItem( 'PerfilNombres', { nombres: [ perfil.nombrePerfil ] } )
+        storage.setItem( 'PerfilNombres', { nombres: [ adicional.nombre ] } )
         .then(
 
           // Se guarda el arreglo de nombres
           () => {
             // Se guarda el perfil con el nombre como llave
-            storage.setItem( perfil.nombrePerfil, perfil )
+            storage.setItem( adicional.nombre, adicional )
             .then(
               // Se guarda el perfil bien, se retorna en la navegacion
               () => {
-                navigation.pop();
+                thisObj.reload().then(() => {
+                  navigation.pop();
+                });
               },
               // Error
               error => {
@@ -97,7 +93,4 @@ export class CreateProfile {
       }
     );
   }
-
-
-
 }

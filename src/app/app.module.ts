@@ -22,7 +22,7 @@ import { AccountSettings } from '../pages/account-settings/account-settings';
   imports: [
     BrowserModule,
     IonicModule.forRoot(Lum),
-    HttpModule,
+    HttpModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
