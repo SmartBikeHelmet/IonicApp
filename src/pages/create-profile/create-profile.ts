@@ -16,10 +16,14 @@ export interface Perfil {
 export class CreateProfile {
   perfil: Perfil;
 
+  reload: any;
+
   constructor( private navCtrl: NavController, private navParams: NavParams, private nativeStorage: NativeStorage ) {
     this.perfil = { nombre: "", direccionales: 10, frenado: 10, continuo: false };
     this.reload = this.navParams.get("callback");
   }
+
+
 
   createProfile (){
     let thisObj = this;
@@ -45,9 +49,10 @@ export class CreateProfile {
 
               // Se guarda el perfil bien, se retorna en la navegacion
               () => {
-                thisObj.reload().then(() => {
-                    navigation.pop();
-                });
+                thisObj.reload().then(
+                  () => navigation.pop(),
+                  error => console.log("error")
+                );
               },
               // Error
               error => {
@@ -75,9 +80,8 @@ export class CreateProfile {
             .then(
               // Se guarda el perfil bien, se retorna en la navegacion
               () => {
-                thisObj.reload().then(() => {
-                  navigation.pop();
-                });
+                thisObj.reload().then(() => navigation.pop(),
+                error => console.log("error"));
               },
               // Error
               error => {

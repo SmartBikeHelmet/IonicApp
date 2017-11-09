@@ -88,11 +88,6 @@ export class HomePage {
     );
   }
 
-  deleteName ( nombre ) : void {
-    let obj = this;
-
-  }
-
   confirmDelete( nombre ) : void {
     let obj = this;
     let thisAlertCrtl = this.alertCtrl;
