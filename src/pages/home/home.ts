@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController } from 'ionic-angular';
 import { Http, Headers } from '@angular/http';
 import { NativeStorage } from '@ionic-native/native-storage';
 import { AlertController } from 'ionic-angular';
@@ -15,7 +15,7 @@ export class HomePage {
   public perfilesLista: string[];
   public activo: string;
 
-  constructor( private navCtrl: NavController, private navParams: NavParams, private http: Http, private nativeStorage: NativeStorage, private alertCtrl: AlertController ) {
+  constructor( private navCtrl: NavController, private http: Http, private nativeStorage: NativeStorage, private alertCtrl: AlertController ) {
     this.loadProfilesList();
   }
 

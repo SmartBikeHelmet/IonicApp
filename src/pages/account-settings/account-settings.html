@@ -10,5 +10,24 @@
 </ion-header>
 
 <ion-content padding>
-  
+  <ion-list-header>
+    Cambia tu contraseña:
+  </ion-list-header>
+  <ion-item>
+    <ion-label color="primary" stacked>Contraseña actual:</ion-label>
+    <ion-input type="password" placeholder="Actual" [(ngModel)]="pass.actual" (change)="checkFormForBtn()"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label color="primary" stacked>Contraseña nueva:</ion-label>
+    <ion-input type="password" placeholder="Nueva" [(ngModel)]="pass.new"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label color="primary" stacked>Repite la contraseña nueva:</ion-label>
+    <ion-input type="password" placeholder="Repite la nueva" [(ngModel)]="pass.repeat" (change)="checkFormForBtn()"></ion-input>
+  </ion-item>
+
+  <button [hidden]="activo" ion-button full outline>Cambiar contraseña</button>
+  <button [hidden]="!activo" ion-button full (click)="sendDataToModule($event)">Cambiar contraseña</button>
 </ion-content>
