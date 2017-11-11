@@ -5,6 +5,8 @@ import { NativeStorage } from '@ionic-native/native-storage';
 import { AlertController } from 'ionic-angular';
 import { CreateProfile } from '../create-profile/create-profile'
 
+import 'rxjs/add/operator/timeout';
+
 
 @Component({
   selector: 'page-home',
@@ -21,13 +23,11 @@ export class HomePage {
 
   loadProfilesList () : void {
     let obj = this;
-
     this.nativeStorage.getItem( 'Activo' )
     .then(
       data  => obj.activo = data.nombre,
       error => obj.activo = null
     );
-
     this.nativeStorage.getItem( 'PerfilNombres' )
     .then(
       data  => obj.perfilesLista = data.nombres,
@@ -55,35 +55,41 @@ export class HomePage {
 
   sendDataToModule ( nombre ) : void {
     let obj = this;
-    alert(nombre);
     this.nativeStorage.getItem( nombre )
     .then(
       data => {
-        var body = "intensidadDireccional="+ data.direccionales +"&intensidadFrenado="+ data.frenado +"&frenadoContinuo="+ data.continuo;
-        alert( body );
-        obj.nativeStorage.setItem('Activo', { nombre: data.nombre })
-        .then(
-          () => {
-            obj.activo = data.nombre;
-          },
-          error => {
 
-          }
-        );
-        /*var headers = new Headers();
+        var body = "intensidadDireccional="+ Math.floor( (data.direccionales/5.1)+1) +"&intensidadFrenado="+ Math.floor( (data.frenado/5.1)+1)  +"&frenadoContinuo="+ data.continuo;
+        alert( body );
+        var headers = new Headers();
         headers.append('Content-Type', 'application/x-www-form-urlencoded');
         this.http.post( 'http://192.168.111.1/index.lua', body, { headers: headers } )
+        .timeout(3000)
         .subscribe(
            data => {
             console.log(data['_body']);
-          },
+            // manage boolean received from server to let set as active
+            obj.nativeStorage.setItem('Activo', { nombre: nombre })
+            .then(
+              () => {
+                obj.activo = nombre;
+              },
+              error => {
+                alert("Error en activacion del perfil");
+              }
+            );
+
+
+
+           },
            error => {
             console.log(error);
+            alert("Error enviando la informacion");
            }
-         );*/
+         );
       },
       error => {
-
+        alert("Error obteniendo el perfil");
       }
     );
   }
@@ -111,32 +117,33 @@ export class HomePage {
             },
             {
               text: 'Si',
-              handler: () => {
-                storage.remove(nombre)
-                .then(
-                  () => {
-                    storage.getItem( 'PerfilNombres' )
+              handler:
+                () => {
+                  storage.remove(nombre)
                     .then(
-                      data  =>{
-                       data.nombres.splice( data.nombres.indexOf( nombre ) );
-                       storage.setItem( 'PerfilNombres', data )
-                       .then(
-                         () => {
-                           obj.loadProfilesList();
-                         },
-                         error => {
-                           console.log("Error al eliminar el perfil " + nombre);
-                         }
-                       );
+                      () => {
+                        storage.getItem( 'PerfilNombres' )
+                        .then(
+                          data  =>{
+                           data.nombres.splice( data.nombres.indexOf( nombre ) , 1);
+                           storage.setItem( 'PerfilNombres', data )
+                           .then(
+                             () => {
+                               obj.loadProfilesList();
+                             },
+                             error => {
+                               console.log("Error al eliminar el perfil " + nombre);
+                             }
+                           );
+                          },
+                          error => obj.perfilesLista = []
+                        );
                       },
-                      error => obj.perfilesLista = []
+                      error => {
+                        console.log("Error al eliminar el perfil " + nombre);
+                      }
                     );
-                  },
-                  error => {
-                    console.log("Error al eliminar el perfil " + nombre);
-                  }
-                );
-              }
+                }
             }
           ]
         });
