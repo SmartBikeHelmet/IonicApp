@@ -4,7 +4,6 @@ import { Http, Headers } from '@angular/http';
 import { NativeStorage } from '@ionic-native/native-storage';
 import { AlertController } from 'ionic-angular';
 import { CreateProfile } from '../create-profile/create-profile'
-
 import 'rxjs/add/operator/timeout';
 
 
@@ -50,7 +49,26 @@ export class HomePage {
     });
   }
 
-
+/*
+  test () : void {
+      var body = "intensidadDireccional="+ 2 +"&intensidadFrenado="+ 2+"&frenadoContinuo="+ true;
+      alert( body );
+      var headers = new Headers();
+      headers.append('Content-Type', 'application/x-www-form-urlencoded');
+      this.http.post( 'http://192.168.4.1/index.lua', body, { headers: headers } )
+      .timeout(3000)
+      .subscribe(
+         data => {
+          console.log(data['_body']);
+          alert(data);
+          // manage boolean received from server to let set as active
+         },
+         error => {
+          console.log(error);
+          alert("Error enviando la informacion");
+         }
+       );
+  }*/
 
 
   sendDataToModule ( nombre ) : void {
@@ -63,24 +81,21 @@ export class HomePage {
         alert( body );
         var headers = new Headers();
         headers.append('Content-Type', 'application/x-www-form-urlencoded');
-        this.http.post( 'http://192.168.111.1/index.lua', body, { headers: headers } )
+        this.http.post( 'http://192.168.4.1/index.lua', body, { headers: headers } )
         .timeout(3000)
         .subscribe(
            data => {
-            console.log(data['_body']);
-            // manage boolean received from server to let set as active
-            obj.nativeStorage.setItem('Activo', { nombre: nombre })
-            .then(
-              () => {
-                obj.activo = nombre;
-              },
-              error => {
-                alert("Error en activacion del perfil");
-              }
-            );
-
-
-
+            if( data['_body'] == "true" || data['_body'] == "True"  ){
+              obj.nativeStorage.setItem('Activo', { nombre: nombre })
+              .then(
+                () => {
+                  obj.activo = nombre;
+                },
+                error => {
+                  alert("Error en activacion del perfil");
+                }
+              );
+            }else alert("Error en activacion del perfil");
            },
            error => {
             console.log(error);
