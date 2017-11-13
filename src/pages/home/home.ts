@@ -4,8 +4,10 @@ import { Http, Headers } from '@angular/http';
 import { NativeStorage } from '@ionic-native/native-storage';
 import { AlertController } from 'ionic-angular';
 import { CreateProfile } from '../create-profile/create-profile'
-import 'rxjs/add/operator/timeout';
+import {Observable} from 'rxjs/Rx'
 
+import 'rxjs/add/operator/timeout';
+declare let WifiWizard: any;
 
 @Component({
   selector: 'page-home',
@@ -13,11 +15,41 @@ import 'rxjs/add/operator/timeout';
 })
 export class HomePage {
 
-  public perfilesLista: string[];
   public activo: string;
+  public perfilesLista: string[];
+  public connected: boolean;
+  //public checkConnection : any;
+
 
   constructor( private navCtrl: NavController, private http: Http, private nativeStorage: NativeStorage, private alertCtrl: AlertController ) {
     this.loadProfilesList();
+    this.connected = false;
+    //this.checkConnection = window.setInterval( function(){ this.checkWifi(this) } , 3000 );
+    let obj = this;
+    Observable.interval(3000).subscribe( x =>
+    {
+      (function(){
+
+        let wifiError = function(){
+          obj.connected = false;
+          alert("Error al verificar la conexion");
+        };
+
+
+        let isConnected = function( res ){
+          let isWifi = function(res){
+            obj.connected = res == "\"Lum\"";
+          };
+          let wifiError = function(){
+            obj.connected = false;
+            alert("Error al verificar la conexion");
+          };
+          if( res ) WifiWizard.getCurrentSSID(isWifi, wifiError);
+        };
+        WifiWizard.isWifiEnabled( isConnected, wifiError);
+      })();
+    });
+
   }
 
   loadProfilesList () : void {
@@ -32,6 +64,11 @@ export class HomePage {
       data  => obj.perfilesLista = data.nombres,
       error => obj.perfilesLista = []
     );
+  }
+
+  test() : void{
+    WifiWizard.getCurrentSSID( function(){alert("test")}, function(){alert("test")});
+
   }
 
   newProfileTapped ( $event ) : void {
@@ -49,34 +86,11 @@ export class HomePage {
     });
   }
 
-/*
-  test () : void {
-      var body = "intensidadDireccional="+ 2 +"&intensidadFrenado="+ 2+"&frenadoContinuo="+ true;
-      alert( body );
-      var headers = new Headers();
-      headers.append('Content-Type', 'application/x-www-form-urlencoded');
-      this.http.post( 'http://192.168.4.1/index.lua', body, { headers: headers } )
-      .timeout(3000)
-      .subscribe(
-         data => {
-          console.log(data['_body']);
-          alert(data);
-          // manage boolean received from server to let set as active
-         },
-         error => {
-          console.log(error);
-          alert("Error enviando la informacion");
-         }
-       );
-  }*/
-
-
   sendDataToModule ( nombre ) : void {
     let obj = this;
     this.nativeStorage.getItem( nombre )
     .then(
       data => {
-
         var body = "intensidadDireccional="+ Math.floor( (data.direccionales/5.1)+1) +"&intensidadFrenado="+ Math.floor( (data.frenado/5.1)+1)  +"&frenadoContinuo="+ data.continuo;
         alert( body );
         var headers = new Headers();

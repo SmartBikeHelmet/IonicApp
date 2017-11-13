@@ -6,18 +6,28 @@
     <ion-title>
       Perfiles
     </ion-title>
+    <ion-buttons end>
+      <button class="connected" [hidden]="!connected" ion-button icon-only>
+        <ion-icon name="wifi"></ion-icon>
+      </button>
+      <button class="disconnected" [hidden]="connected" ion-button icon-only>
+        <ion-icon name="wifi"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
   <button ion-button full (click)="newProfileTapped($event)">Crear un nuevo perfil</button>
-  <!-- <button ion-button full (click)="test()">test</button> -->
+  <!--<button ion-button full (click)="test()">test</button> -->
 
   <ion-list>
     <ion-list-header>
       Tus perfiles:
     </ion-list-header>
-
+    <div [hidden]="connected">
+      No estas conectado al módulo Lum. No puedes conectar tus perfiles.
+    </div>
     <!-- <div *ngShow="activo != null && perfilesLista != []"> -->
       <!-- Perfil activo -->
       <ion-item *ngIf="activo != null">
@@ -40,7 +50,7 @@
             <label>{{nombre}}</label>
           </ion-row>
           <ion-row>
-            <button ion-button color="secondary" icon-start item-end (click)="sendDataToModule( nombre )">
+            <button [hidden]="!connected" ion-button color="secondary" icon-start item-end (click)="sendDataToModule( nombre )">
               <ion-icon name="cloud-upload"></ion-icon>
               Activar
             </button>
